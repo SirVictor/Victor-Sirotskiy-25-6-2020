@@ -17,8 +17,8 @@ class HomePage(Browser):
     # def fill(self, text, *locator):
     #     self.driver.find_element(*locator).send_keys(text)
 
-    def click_element(self, *locator):
-        self.driver.find_element(*locator).click()
+    # def click_element(self, *locator):
+    #     self.driver.find_element(*locator).click()
 
     def navigate(self, address):
         self.driver.get(address)
@@ -66,4 +66,61 @@ class HomePage(Browser):
         phone_field.send_keys(telephone)
 
         submit.click()
-        time.sleep(3)
+        time.sleep(0.5)
+
+    def err_msg_empty_field(self, id_field):
+        error_msg = {
+            "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
+            "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
+            "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
+            "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
+
+        form = self.driver.find_element_by_id('section-inputs')
+        input_name = form.find_element_by_id(id_field)
+        input_name.click()
+        form.click()
+        time.sleep(0.5)
+        span = form.find_element_by_css_selector(error_msg[id_field])
+        return 'הוא שדה חובה' in span.text
+
+    def err_msg_fill_feild(self, id_field, text, ch_status):
+        error_msg = {
+            "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
+            "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
+            "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
+            "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
+
+        form = self.driver.find_element_by_id('section-inputs')
+        input_name = form.find_element_by_id(id_field)
+
+        input_name.send_keys(Keys.CONTROL + "a")
+        input_name.send_keys(Keys.DELETE)
+        input_name.send_keys(text)
+        form.click()
+        time.sleep(0.5)
+        span = form.find_element_by_css_selector(error_msg[id_field])
+        print(f' strat{span.text}end')
+        if ch_status:
+            return span.text == ''
+        return 'לא חוקי' in span.text
+
+    def err_msg_fill_feild(self, id_field, text, ch_status):
+        error_msg = {
+            "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
+            "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
+            "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
+            "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
+
+        form = self.driver.find_element_by_id('section-inputs')
+        input_name = form.find_element_by_id(id_field)
+
+        time.sleep(0.5)
+        input_name.send_keys(Keys.CONTROL + "a")
+        input_name.send_keys(Keys.DELETE)
+        input_name.send_keys(text)
+        form.click()
+        span = form.find_element_by_css_selector(error_msg[id_field])
+        print(f' strat{span.text}end')
+        if ch_status:
+            return span.text == ''
+        return 'לא חוקי' in span.text

@@ -1,6 +1,6 @@
 from behave import step
 from nose.tools import assert_equal, assert_not_equal, assert_true
-from selenium.webdriver.common.by import By
+
 
 RETURN_FROM_HOME_PAGE = None
 
@@ -10,7 +10,7 @@ def step_impl(context):
     context.home_page.navigate('https://automation.herolo.co.il/')
 
 
-''' ===================    DownSize Form  ============================='''
+''' ===================    DownSize Form  ============================= '''
 
 
 @step('I expect page title to equal "{page_title}"')
@@ -42,9 +42,9 @@ def step_impl(context, field_name):
 def step_impl(context, name, text, flag):
     global RETURN_FROM_HOME_PAGE
     if flag == 'True':
-        RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_feild(id_field=name, text=text, ch_status=True)
+        RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_field(id_field=name, text=text, ch_status=True)
     elif flag == 'False':
-        RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_feild(id_field=name, text=text, ch_status=False)
+        RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_field(id_field=name, text=text, ch_status=False)
     # print(f'{RETURN_FROM_HOME_PAGE} => {name}  +  {text}  +  {flag}')    # for test
 
 
@@ -57,3 +57,39 @@ def step_impl(context, flag):
         assert_true(RETURN_FROM_HOME_PAGE == False)
 
 
+''' ==============================  Social links =================================== '''
+
+
+@step('I click on "{social}" link')
+def step_impl(context, social):
+    context.home_page.get_social_link(social)
+
+
+@step('I expect for opening new window with Url "{url}"')
+def step_impl(context, url):
+
+    context.home_page.switch_window()
+    assert_equal(str(context.home_page.get_current_url()).lower().split("/")[:3], str(url).lower().split("/")[:3])
+    print(f'{context.home_page.get_current_url()} : {url}')
+
+
+''' ============================= Scroll Button =============================================== '''
+
+
+@step('I scroll "{down}" and wait 1 sec')
+def step_impl(context, down):
+    context.home_page.set_scroll_position(down)
+
+
+@step('I search and after click on scroll button')
+def step_impl(context):
+    scroll = context.home_page.find_element_by_css_selector('a[data-scroll="true"]')
+    scroll.click()
+
+
+@step('I expect scroll from "{down}" to Top')
+def step_impl(context, down):
+    if context.home_page.SCROLL == down:
+        assert_equal(context.home_page.get_scroll_position(), 0)
+    else:
+        assert_not_equal(True, False)

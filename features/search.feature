@@ -64,8 +64,34 @@ Feature: Herolo
     | victor |  work1  | victorius@gmail.com | 050-5820546 | True  |
 
 
+  Scenario Outline: Check social network Links
+    Given I navigate to the Herolo page
+    When I click on "<social>" link
+    Then I expect for opening new window with Url "<url>"
+
+  Examples:
+  |  social   |                 url                              |
+  | Facebook  | https://www.facebook.com/Herolofrontend          |
+  | Linkedin  | https://www.linkedin.com/                        |
+  | WhatsApp1 | https://api.whatsapp.com/send?phone=972544945333 |
+  | WhatsApp2 | https://api.whatsapp.com/send?phone=972544945333 |
+  | WebSite   | https://herolo.co.il/?lang=he                    |
 
 
+  Scenario Outline: Check Scroll Link
+  Given I navigate to the Herolo page
+  Then I scroll "<down>" and wait 1 sec
+  Then I search and after click on scroll button
+  And I expect scroll from "<down>" to Top
+
+  Examples:
+  | down |
+  | 5000 |
+  | 3000 |
+  | 2000 |
+  | 1000 |
+  | 500  |
+  | 10   |
 #    Given I navigate to the PyPi Home page "<start>" "<eat>" lalala "<left>"
 #    When I search for "behave"
 #    Then I am taken to the PyPi Search Results page

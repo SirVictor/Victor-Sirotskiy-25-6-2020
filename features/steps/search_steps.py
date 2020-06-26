@@ -93,3 +93,36 @@ def step_impl(context, down):
         assert_equal(context.home_page.get_scroll_position(), 0)
     else:
         assert_not_equal(True, False)
+
+
+''' ============================= Scroll Button =============================================== '''
+
+
+@step("I search for a Mail link")
+def step_impl(context):
+    global RETURN_FROM_HOME_PAGE
+    RETURN_FROM_HOME_PAGE = context.home_page.find_element_by_partial_link_text('@herolo')
+
+
+@step("I expect that link is valid (start with mailto:)")
+def step_impl(context):
+    print(RETURN_FROM_HOME_PAGE.get_attribute('href'))
+    assert_true(str(RETURN_FROM_HOME_PAGE.get_attribute('href')).startswith('mailto:'))
+
+
+''' ============================= Footer Form =============================================== '''
+
+
+@step('I fill the footer form fields "{field_name}" with "" I expect to see error massage')
+def step_impl(context, field_name):
+    assert_true(context.home_page.err_msg_empty_field_footer(field_name))
+
+
+@step('I fill the footer form field "{name}" with "{text}" and "{flag}" of Case')
+def step_impl(context, name, text, flag):
+    global RETURN_FROM_HOME_PAGE
+    if flag == 'True':
+        RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_field_footer(id_field=name, text=text, ch_status=True)
+    elif flag == 'False':
+        RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_field_footer(id_field=name, text=text, ch_status=False)
+    # print(f'{RETURN_FROM_HOME_PAGE} => {name}  +  {text}  +  {flag}')    # for test

@@ -3,10 +3,27 @@ from browser import Browser
 from selenium.webdriver.common.keys import Keys
 import time
 
+SCROLL = 0
 
-class HomePage(Browser):
+form_error_msg = {
+    "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
+    "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
+    "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
+    "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
 
-    SCROLL = 0
+footer_error_msg = {
+    "name": '#footer > form > div > div:nth-child(1) > label > span',
+    "email": "#footer > form > div > div:nth-child(2) > label > span",
+    "phone": "#footer > form > div > div:nth-child(3) > label > span"}
+
+soc_dict = {
+    'Facebook': 'https://www.facebook.com/Herolofrontend',
+    'Linkedin': 'https://www.linkedin.com/company/herolo/',
+    'WhatsApp': 'https://api.whatsapp.com/send?phone=972544945333',
+    'WebSite': 'https://herolo.co.il/?lang=he'
+}
+
+class HeroloPage(Browser):
 
     def set_scroll_position(self, position):
         try:
@@ -38,17 +55,13 @@ class HomePage(Browser):
 
     def get_current_url(self):
         try:
+            time.sleep(1)
             return self.driver.current_url
         except Exception as e:
             raise ValueError(e)
 
     def get_social_link(self, name):
-        soc_dict = {
-            'Facebook': 'https://www.facebook.com/Herolofrontend',
-            'Linkedin': 'https://www.linkedin.com/company/herolo/',
-            'WhatsApp': 'https://api.whatsapp.com/send?phone=972544945333',
-            'WebSite': 'https://herolo.co.il/?lang=he'
-        }
+        global soc_dict
         try:
             if 'WhatsApp' not in name:
                 social = self.driver.find_element_by_css_selector(f'a[href = "{soc_dict[name]}"]')
@@ -72,38 +85,31 @@ class HomePage(Browser):
         except Exception as e:
             raise ValueError(e)
 
+    @staticmethod
+    def _is_null(field):
+        return field == 'null'
+
     def form_section_inputs(self, name, company, email, telephone):
-        if name == 'null':
-            name = ""
-        if company == 'null':
-            company = ""
-        if email == 'null':
-            email = ""
-        if telephone == 'null':
-            telephone = ""
+
         try:
             form = self.driver.find_element_by_id('section-inputs')
             submit = form.find_element_by_css_selector('a[type="button"]')
 
-            name_field = form.find_element_by_id('name')
-            name_field.send_keys(Keys.CONTROL + "a")
-            name_field.send_keys(Keys.DELETE)
-            name_field.send_keys(name)
+            fields = [
+                {'text': 'name', 'value': name},
+                {'text': 'company', 'value': company},
+                {'text': 'email', 'value': email},
+                {'text': 'telephone', 'value': telephone}
+            ]
 
-            company_field = form.find_element_by_id('company')
-            company_field.send_keys(Keys.CONTROL + "a")
-            company_field.send_keys(Keys.DELETE)
-            company_field.send_keys(company)
+            for field in fields:
+                if self._is_null(field['value']):
+                    field['value'] = ""
 
-            email_field = form.find_element_by_id('email')
-            email_field.send_keys(Keys.CONTROL + "a")
-            email_field.send_keys(Keys.DELETE)
-            email_field.send_keys(email)
-
-            phone_field = form.find_element_by_id('telephone')
-            phone_field.send_keys(Keys.CONTROL + "a")
-            phone_field.send_keys(Keys.DELETE)
-            phone_field.send_keys(telephone)
+                name_field = form.find_element_by_id(field['text'])
+                name_field.send_keys(Keys.CONTROL + "a")
+                name_field.send_keys(Keys.DELETE)
+                name_field.send_keys(field['value'])
 
             submit.click()
             time.sleep(0.5)
@@ -111,51 +117,20 @@ class HomePage(Browser):
             raise ValueError(e)
 
     def err_msg_empty_field(self, id_field):
-        error_msg = {
-            "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
-            "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
-            "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
-            "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
+        global form_error_msg
         try:
             form = self.driver.find_element_by_id('section-inputs')
             input_name = form.find_element_by_id(id_field)
             input_name.click()
             form.click()
             time.sleep(0.5)
-            span = form.find_element_by_css_selector(error_msg[id_field])
+            span = form.find_element_by_css_selector(form_error_msg[id_field])
             return 'הוא שדה חובה' in span.text
         except Exception as e:
             raise ValueError(e)
 
-    def err_msg_fill_feild(self, id_field, text, ch_status):
-        error_msg = {
-            "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
-            "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
-            "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
-            "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
-        try:
-            form = self.driver.find_element_by_id('section-inputs')
-            input_name = form.find_element_by_id(id_field)
-
-            input_name.send_keys(Keys.CONTROL + "a")
-            input_name.send_keys(Keys.DELETE)
-            input_name.send_keys(text)
-            form.click()
-            time.sleep(0.5)
-            span = form.find_element_by_css_selector(error_msg[id_field])
-            print(f' strat{span.text}end')
-            if ch_status:
-                return span.text == ''
-            return 'לא חוקי' in span.text
-        except Exception as e:
-            raise ValueError(e)
-
     def err_msg_fill_field(self, id_field, text, ch_status):
-        error_msg = {
-            "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
-            "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
-            "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
-            "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
+        global form_error_msg
         try:
             form = self.driver.find_element_by_id('section-inputs')
             input_name = form.find_element_by_id(id_field)
@@ -165,7 +140,7 @@ class HomePage(Browser):
             input_name.send_keys(Keys.DELETE)
             input_name.send_keys(text)
             form.click()
-            span = form.find_element_by_css_selector(error_msg[id_field])
+            span = form.find_element_by_css_selector(form_error_msg[id_field])
             print(f' start{span.text}end')
             if ch_status:
                 return span.text == ''
@@ -176,5 +151,45 @@ class HomePage(Browser):
     def find_element_by_css_selector(self, selector):
         try:
             return self.driver.find_element_by_css_selector(selector)
+        except Exception as e:
+            raise ValueError(e)
+
+    def find_element_by_partial_link_text(self, partial_link_text):
+        try:
+            return self.driver.find_element_by_partial_link_text(partial_link_text)
+
+        except Exception as e:
+            raise ValueError(e)
+
+    def err_msg_empty_field_footer(self, id_field):
+        global footer_error_msg
+        try:
+            form = self.driver.find_element_by_id('footer')
+            input_name = form.find_element_by_name(id_field)
+            input_name.send_keys(Keys.ENTER)
+            time.sleep(0.5)
+            span = form.find_element_by_css_selector(footer_error_msg[id_field])
+            print(span.text, 'הוא שדה חובה' in span.text)
+            return 'הוא שדה חובה' in span.text
+        except Exception as e:
+            raise ValueError(e)
+
+    def err_msg_fill_field_footer(self, id_field, text, ch_status):
+        global footer_error_msg
+        try:
+            form = self.driver.find_element_by_id('footer')
+            input_name = form.find_element_by_name(id_field)
+
+            time.sleep(0.5)
+            input_name.send_keys(Keys.CONTROL + "a")
+            input_name.send_keys(Keys.DELETE)
+            input_name.send_keys(text)
+            form.click()
+            if ch_status:
+                try:
+                    span = form.find_element_by_css_selector(footer_error_msg[id_field])
+                except:
+                    return True
+            return 'לא חוקי' in span.text
         except Exception as e:
             raise ValueError(e)

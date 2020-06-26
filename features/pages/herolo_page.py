@@ -3,7 +3,7 @@ from browser import Browser
 from selenium.webdriver.common.keys import Keys
 import time
 
-SCROLL = 0
+
 
 form_error_msg = {
     "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
@@ -24,14 +24,15 @@ soc_dict = {
 }
 
 class HeroloPage(Browser):
+    SCROLL = 0
 
     def set_scroll_position(self, position):
         try:
             self.driver.execute_script(f"window.scrollTo(0,{position})")
 
             time.sleep(1)
-            global SCROLL
-            SCROLL = self.get_scroll_position()
+
+            self.SCROLL = self.get_scroll_position()
         except Exception as e:
             raise ValueError(e)
 
@@ -55,7 +56,7 @@ class HeroloPage(Browser):
 
     def get_current_url(self):
         try:
-            time.sleep(1)
+            time.sleep(2)
             return self.driver.current_url
         except Exception as e:
             raise ValueError(e)
@@ -187,9 +188,11 @@ class HeroloPage(Browser):
             form.click()
             if ch_status:
                 try:
-                    span = form.find_element_by_css_selector(footer_error_msg[id_field])
+                    form.find_element_by_css_selector(footer_error_msg[id_field])
+                    return False
                 except:
                     return True
-            return 'לא חוקי' in span.text
+
+            return 'לא חוקי' in form.find_element_by_css_selector(footer_error_msg[id_field]).text
         except Exception as e:
             raise ValueError(e)

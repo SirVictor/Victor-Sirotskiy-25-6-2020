@@ -87,8 +87,7 @@ Feature: Herolo
   | 3000 |
   | 2000 |
   | 1000 |
-  | 500  |
-  | 10   |
+
 
 
   Scenario: Check Valid Email Link

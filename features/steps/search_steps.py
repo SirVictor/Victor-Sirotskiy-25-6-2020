@@ -95,7 +95,7 @@ def step_impl(context, down):
         assert_not_equal(True, False)
 
 
-''' ============================= Scroll Button =============================================== '''
+''' ============================= Mail link =============================================== '''
 
 
 @step("I search for a Mail link")

@@ -196,3 +196,30 @@ class HeroloPage(Browser):
             return 'לא חוקי' in form.find_element_by_css_selector(footer_error_msg[id_field]).text
         except Exception as e:
             raise ValueError(e)
+
+    def footer_form_section_inputs(self, name, email, telephone):
+        def _is_null(field):
+            return field == 'null'
+        try:
+            form = self.driver.find_element_by_id('footer')
+            submit = form.find_element_by_css_selector('button')
+
+            fields = [
+                {'text': 'name', 'value': name},
+                {'text': 'email', 'value': email},
+                {'text': 'phone', 'value': telephone}
+            ]
+
+            for field in fields:
+                if _is_null(field['value']):
+                    field['value'] = ""
+
+                name_field = form.find_element_by_name(field['text'])
+                name_field.send_keys(Keys.CONTROL + "a")
+                name_field.send_keys(Keys.DELETE)
+                name_field.send_keys(field['value'])
+
+            submit.click()
+            time.sleep(0.5)
+        except Exception as e:
+            raise ValueError(e)

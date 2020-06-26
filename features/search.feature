@@ -136,3 +136,17 @@ Feature: Herolo
     |    phone|  039179222          | True  |
     |    phone|  03-9179222         | True  |
     |    phone|  050-5820546        | True  |
+
+
+  Scenario Outline: Check footer form
+    Given I navigate to the Herolo page
+    Then I fill the form fields "<name>",  "<email>" and "<phone>"
+    And I expect to be redirected to the thank you page: "<flag>"
+
+    Examples:
+    |  name  |        email         |    phone    | flag  |
+    | null   |       null           |    null     | False |
+    | victor |  victorius@gmail.com | 0505820546  | True  |
+    |  null  |       null           | 0505820546  | False |
+    | victor |       gmail.com      | 0505820546  | False |
+    | victor |  victorius@gmail.com | 050-5820546 | True  |

@@ -126,3 +126,8 @@ def step_impl(context, name, text, flag):
     elif flag == 'False':
         RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_field_footer(id_field=name, text=text, ch_status=False)
     # print(f'{RETURN_FROM_HOME_PAGE} => {name}  +  {text}  +  {flag}')    # for test
+
+
+@step('I fill the form fields "{name}",  "{email}" and "{phone}"')
+def step_impl(context, name, email, phone):
+     context.home_page.footer_form_section_inputs(name, email, phone)

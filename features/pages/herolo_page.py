@@ -4,17 +4,18 @@ from selenium.webdriver.common.keys import Keys
 import time
 
 
-
 form_error_msg = {
     "name": '#section-inputs > div:nth-child(1) > div:nth-child(1) > span',
     "company": "#section-inputs > div:nth-child(1) > div:nth-child(2) > span",
     "email": "#section-inputs > div:nth-child(2) > div:nth-child(1) > span",
-    "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"}
+    "telephone": "#section-inputs > div:nth-child(2) > div:nth-child(2) > span"
+}
 
 footer_error_msg = {
     "name": '#footer > form > div > div:nth-child(1) > label > span',
     "email": "#footer > form > div > div:nth-child(2) > label > span",
-    "phone": "#footer > form > div > div:nth-child(3) > label > span"}
+    "phone": "#footer > form > div > div:nth-child(3) > label > span"
+}
 
 soc_dict = {
     'Facebook': 'https://www.facebook.com/Herolofrontend',
@@ -22,6 +23,14 @@ soc_dict = {
     'WhatsApp': 'https://api.whatsapp.com/send?phone=972544945333',
     'WebSite': 'https://herolo.co.il/?lang=he'
 }
+
+pop_up_err_msg = {
+
+            "name": '#modal-form > div > div:nth-child(1) > label > span',
+            "email": "#modal-form > div > div:nth-child(2) > label > span",
+            "phone": "#modal-form > div > div:nth-child(2) > label > span"
+}
+
 
 class HeroloPage(Browser):
     SCROLL = 0
@@ -198,8 +207,8 @@ class HeroloPage(Browser):
             raise ValueError(e)
 
     def footer_form_section_inputs(self, name, email, telephone):
-        def _is_null(field):
-            return field == 'null'
+        def _is_null(element):
+            return element == 'null'
         try:
             form = self.driver.find_element_by_id('footer')
             submit = form.find_element_by_css_selector('button')
@@ -221,5 +230,58 @@ class HeroloPage(Browser):
 
             submit.click()
             time.sleep(0.5)
+        except Exception as e:
+            raise ValueError(e)
+
+    def scroll_down_and_back_to_the_top(self):
+
+        down = 5000
+
+        try:
+            for i in range(0, down, 5):
+                self.driver.execute_script(f"window.scrollTo(0,{i})")
+            time.sleep(5)
+            for i in range(down - 1, 0, -5):
+                self.driver.execute_script(f"window.scrollTo(0,{i})")
+            time.sleep(25)
+        except Exception as e:
+            raise ValueError(e)
+
+    def empty_fields_pop_up_form(self, pop_up_div):
+        try:
+            pop_up_div.find_element_by_css_selector("button").click()
+            if self.get_current_url() == 'https://automation.herolo.co.il/':
+                for name in pop_up_err_msg.keys():
+                    span = pop_up_div.find_element_by_css_selector(pop_up_err_msg[name])
+                    print(span.text, 'הוא שדה חובה' in span.text)
+                    if 'הוא שדה חובה' not in span.text:
+                        return False
+                return True
+            return False
+        except Exception as e:
+            raise ValueError(e)
+
+    def err_msg_fill_field_pop_up(self, name, text, ch_status):
+        global pop_up_err_msg
+        try:
+                    div = self.driver.find_element_by_css_selector('div[class="ReactModalPortal"]')
+
+                    input_name = div.find_element_by_name(name)
+
+                    time.sleep(0.5)
+                    input_name.send_keys(Keys.CONTROL + "a")
+                    input_name.send_keys(Keys.DELETE)
+
+                    input_name.send_keys(text)
+
+                    if ch_status == "True":
+                        try:
+                            div.find_element_by_css_selector(pop_up_err_msg[name])
+                            return False
+                        except:
+                            return True
+                    else:
+                        return 'לא חוקי' in div.find_element_by_css_selector(pop_up_err_msg[name]).text
+
         except Exception as e:
             raise ValueError(e)

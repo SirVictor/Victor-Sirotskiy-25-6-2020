@@ -131,3 +131,27 @@ def step_impl(context, name, text, flag):
 @step('I fill the form fields "{name}",  "{email}" and "{phone}"')
 def step_impl(context, name, email, phone):
      context.home_page.footer_form_section_inputs(name, email, phone)
+
+
+''' ============================= POP UP FORM =============================================== '''
+
+
+@step("I scroll page down, wait 5 sec and sroll top I wait 25 sec")
+def step_impl(context):
+    context.home_page.scroll_down_and_back_to_the_top()
+
+
+@step("I expect catch Pop Up Form")
+def step_impl(context):
+    global RETURN_FROM_HOME_PAGE
+    RETURN_FROM_HOME_PAGE = context.home_page.find_element_by_css_selector('div[class="ReactModalPortal"]')
+
+
+@step("I send empty fields I expect to see error massage")
+def step_impl(context):
+    assert_true(context.home_page.empty_fields_pop_up_form(RETURN_FROM_HOME_PAGE))
+
+
+@step('I send "{case}" value: "{text}"  to "{name}" and I expect to see error massage')
+def step_impl(context, case, text,  name,):
+    assert_true(context.home_page.err_msg_fill_field_pop_up(name=name, text=text, ch_status=case))

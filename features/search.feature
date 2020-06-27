@@ -150,3 +150,22 @@ Feature: Herolo
     |  null  |       null           | 0505820546  | False |
     | victor |       gmail.com      | 0505820546  | False |
     | victor |  victorius@gmail.com | 050-5820546 | True  |
+
+
+    Scenario Outline:  Catch Pop-Up form
+      Given I navigate to the Herolo page
+      Then I scroll page down, wait 5 sec and sroll top I wait 25 sec
+      When  I expect catch Pop Up Form
+      Then I send empty fields I expect to see error massage
+      And I send "<CASE>" value: "<TEXT>"  to "email" and I expect to see error massage
+      And I send "<CASE>" value: "<NUMBER>"  to "phone" and I expect to see error massage
+
+
+
+      Examples:
+       |   CASE    |        TEXT              |        NUMBER      |
+       |   False   |          frhgkj          |  5465654456465465  |
+       |   False   |           @je            |      02-ekjbf      |
+       |   True    |     vicort@gmail.com     |     03-7894565     |
+       |   True    |    vidddcort@gmail.com   |     0505820546     |
+

@@ -43,4 +43,8 @@ Test web Objects:
     Social links,
     Mail links,
     Title
-     
+    
+
+P.S
+
+    All test scenarios and steps you can see "search.feature" 

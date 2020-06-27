@@ -285,3 +285,51 @@ class HeroloPage(Browser):
 
         except Exception as e:
             raise ValueError(e)
+
+    def pop_up_form_section_inputs(self, name, email, telephone):
+
+        def _is_null(element):
+            return element == 'null'
+
+        try:
+
+            div = self.driver.find_element_by_css_selector('div[class="ReactModalPortal"]')
+            btn = div.find_element_by_css_selector('button')
+
+            fields = [
+                {'text': 'name', 'value': name},
+                {'text': 'email', 'value': email},
+                {'text': 'phone', 'value': telephone}
+            ]
+
+            for field in fields:
+                if _is_null(field['value']):
+                    field['value'] = ""
+
+                name_field = div.find_element_by_name(field['text'])
+                name_field.send_keys(Keys.CONTROL + "a")
+                name_field.send_keys(Keys.DELETE)
+                name_field.send_keys(field['value'])
+
+            btn.click()
+            time.sleep(0.5)
+        except Exception as e:
+            raise ValueError(e)
+
+    def close_pop_up(self):
+
+        try:
+            div = self.driver.find_element_by_css_selector('div[class="ReactModalPortal"]')
+            spans = div.find_elements_by_css_selector('span')
+            close = [span for span in spans if str(span.get_attribute('class')).startswith("onUnloadPopup__Close")][0]
+            close.click()
+        except Exception as e:
+            raise ValueError(e)
+
+    def _is_pop_up_closed(self):
+        try:
+            if  self.driver.find_element_by_css_selector('div[class="ReactModalPortal"]').text == "":
+                return True
+            return False
+        except Exception as e:
+            raise ValueError(e)

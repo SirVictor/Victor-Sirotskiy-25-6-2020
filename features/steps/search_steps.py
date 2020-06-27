@@ -136,7 +136,7 @@ def step_impl(context, name, email, phone):
 ''' ============================= POP UP FORM =============================================== '''
 
 
-@step("I scroll page down, wait 5 sec and sroll top I wait 25 sec")
+@step("I scroll page down, wait 5 sec and scroll top I wait 25 sec")
 def step_impl(context):
     context.home_page.scroll_down_and_back_to_the_top()
 
@@ -155,3 +155,29 @@ def step_impl(context):
 @step('I send "{case}" value: "{text}"  to "{name}" and I expect to see error massage')
 def step_impl(context, case, text,  name,):
     assert_true(context.home_page.err_msg_fill_field_pop_up(name=name, text=text, ch_status=case))
+
+
+@step('Then I fill the Popup form fields "{name}",  "{email}" and "{phone}"')
+def step_impl(context, name, email, phone):
+    context.home_page.pop_up_form_section_inputs(name, email, phone)
+
+
+@step('I expect to be redirected "{CASE}"')
+def step_impl(context, CASE):
+    if CASE == "True":
+        assert_equal(context.home_page.get_current_url(), 'https://automation.herolo.co.il/thank-you/',
+                     msg='Positive Case')
+    else:
+        assert_not_equal(context.home_page.get_current_url(), 'https://automation.herolo.co.il/thank-you/',
+                         msg="Negative Case")
+
+
+@step("I click on the element X (Pop up Close)")
+def step_impl(context):
+    global RETURN_FROM_HOME_PAGE
+    context.home_page.close_pop_up()
+
+
+@step("I expect It will be close")
+def step_impl(context):
+    assert_true(context.home_page._is_pop_up_closed())

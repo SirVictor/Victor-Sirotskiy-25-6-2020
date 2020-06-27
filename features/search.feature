@@ -154,18 +154,27 @@ Feature: Herolo
 
     Scenario Outline:  Catch Pop-Up form
       Given I navigate to the Herolo page
-      Then I scroll page down, wait 5 sec and sroll top I wait 25 sec
+      Then I scroll page down, wait 5 sec and scroll top I wait 25 sec
       When  I expect catch Pop Up Form
       Then I send empty fields I expect to see error massage
       And I send "<CASE>" value: "<TEXT>"  to "email" and I expect to see error massage
       And I send "<CASE>" value: "<NUMBER>"  to "phone" and I expect to see error massage
-
+      And Then I fill the Popup form fields "<name>",  "<email>" and "<phone>"
+      And I expect to be redirected "<CASE>"
 
 
       Examples:
-       |   CASE    |        TEXT              |        NUMBER      |
-       |   False   |          frhgkj          |  5465654456465465  |
-       |   False   |           @je            |      02-ekjbf      |
-       |   True    |     vicort@gmail.com     |     03-7894565     |
-       |   True    |    vidddcort@gmail.com   |     0505820546     |
+       |   CASE    |        TEXT              |        NUMBER      |  name  |        email         |    phone    |
+       |   False   |          frhgkj          |  5465654456465465  | victor |       gmail.com      | 0505820546  |
+       |   False   |           @je            |      02-ekjbf      |  null  |       null           | 0505820546  |
+       |   True    |     vicort@gmail.com     |     03-7894565     | victor |  victorius@gmail.com | 0505820546  |
+       |   True    |    vidddcort@gmail.com   |     0505820546     | victor |  victorius@gmail.com | 050-5820546 |
+
+    Scenario: Check Pop-Up Closer
+      Given I navigate to the Herolo page
+      And I scroll page down, wait 5 sec and scroll top I wait 25 sec
+      And  I expect catch Pop Up Form
+      Then I click on the element X (Pop up Close)
+      And  I expect It will be close
+
 

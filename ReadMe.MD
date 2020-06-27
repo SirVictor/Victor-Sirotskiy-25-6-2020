@@ -32,8 +32,9 @@ Imports:
    
 For Run Test: 
     
-    1) Run search.feature 
-    2) From cmd "behave"     
+      Run search.feature 
+             or
+      From cmd "behave"     
 
 Test Scenario:
 

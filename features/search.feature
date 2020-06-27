@@ -166,7 +166,7 @@ Feature: Herolo
       Examples:
        |   CASE    |        TEXT              |        NUMBER      |  name  |        email         |    phone    |
        |   False   |          frhgkj          |  5465654456465465  | victor |       gmail.com      | 0505820546  |
-       |   False   |           @je            |      02-ekjbf      |  null  |       null           | 0505820546  |
+       |   False   |           @je            |      02-ekjbf      |  null  |       null           |0505820546455|
        |   True    |     vicort@gmail.com     |     03-7894565     | victor |  victorius@gmail.com | 0505820546  |
        |   True    |    vidddcort@gmail.com   |     0505820546     | victor |  victorius@gmail.com | 050-5820546 |
 

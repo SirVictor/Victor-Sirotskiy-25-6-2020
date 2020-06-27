@@ -8,9 +8,10 @@ Title:
 
     Home Assignment Automation test project. 
 
-Target:
-
-    
+Coding language:
+        
+        Python 3
+        
 
 IDE:
 

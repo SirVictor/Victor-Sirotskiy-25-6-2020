@@ -15,7 +15,7 @@ Coding language:
 
 IDE:
 
-    PyChram
+    PyCharm
 
 Installs:
 

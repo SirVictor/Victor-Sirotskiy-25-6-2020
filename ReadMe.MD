@@ -10,7 +10,7 @@ Title:
 
 Target:
 
-    http://automation.herolo.co.il
+    
 
 IDE:
 
@@ -34,17 +34,21 @@ For Run Test:
     1) Run search.feature 
     2) From cmd "behave"     
 
-Test web Objects:
+Test Scenario:
+
+    All test scenarios and steps you can see "search.feature"
+
+Tested web objects:
 
     Down Form,
     Footer Form,
     Pop-Up Form,
     Scroll Element,
     Social links,
-    Mail links,
+    Mailto: link, 
     Title
     
 
 P.S
-
-    All test scenarios and steps you can see "search.feature" 
+    
+    In Git you'll be find screenshot with test results. "Herolo_Test_Result_Screen.png" 

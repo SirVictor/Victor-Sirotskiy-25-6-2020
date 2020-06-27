@@ -1,7 +1,6 @@
 from behave import step
 from nose.tools import assert_equal, assert_not_equal, assert_true
 
-
 RETURN_FROM_HOME_PAGE = None
 
 
@@ -47,7 +46,6 @@ def step_impl(context, name, text, flag):
         RETURN_FROM_HOME_PAGE = context.home_page.err_msg_fill_field(id_field=name, text=text, ch_status=False)
 
 
-
 @step('I expect that in False "{flag}" case(wrong text for this field) will event error message and True case will not')
 def step_impl(context, flag):
     global RETURN_FROM_HOME_PAGE
@@ -67,7 +65,6 @@ def step_impl(context, social):
 
 @step('I expect for opening new window with Url "{url}"')
 def step_impl(context, url):
-
     context.home_page.switch_window()
     assert_equal(str(context.home_page.get_current_url()).lower().split("/")[:3], str(url).lower().split("/")[:3])
     print(f'{context.home_page.get_current_url()} : {url}')
@@ -129,7 +126,7 @@ def step_impl(context, name, text, flag):
 
 @step('I fill the form fields "{name}",  "{email}" and "{phone}"')
 def step_impl(context, name, email, phone):
-     context.home_page.footer_form_section_inputs(name, email, phone)
+    context.home_page.footer_form_section_inputs(name, email, phone)
 
 
 ''' ============================= POP UP FORM =============================================== '''
@@ -152,7 +149,7 @@ def step_impl(context):
 
 
 @step('I send "{case}" value: "{text}"  to "{name}" and I expect to see error massage')
-def step_impl(context, case, text,  name,):
+def step_impl(context, case, text, name, ):
     assert_true(context.home_page.err_msg_fill_field_pop_up(name=name, text=text, ch_status=case))
 
 

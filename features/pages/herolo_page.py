@@ -65,7 +65,7 @@ class HeroloPage(Browser):
 
     def get_current_url(self):
         try:
-            time.sleep(2)
+            time.sleep(5)
             return self.driver.current_url
         except Exception as e:
             raise ValueError(e)
